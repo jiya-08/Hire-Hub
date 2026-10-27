@@ -24,3 +24,29 @@ from django.core.wsgi import get_wsgi_application
 
 application = get_wsgi_application()
 app = application
+
+
+# Auto-initialize database tables and default admin user on serverless environments
+def init_serverless_db():
+    try:
+        from django.core.management import call_command
+        from django.contrib.auth import get_user_model
+        from django.db import connection
+
+        tables = connection.introspection.table_names()
+        if "django_session" not in tables:
+            call_command("migrate", interactive=False)
+
+        User = get_user_model()
+        admin_user = os.environ.get("ADMIN_USERNAME", "admin")
+        admin_password = os.environ.get("ADMIN_PASSWORD", "admin123")
+        admin_email = os.environ.get("ADMIN_EMAIL", "admin@hirehub.com")
+
+        if not User.objects.filter(username=admin_user).exists():
+            User.objects.create_superuser(admin_user, admin_email, admin_password)
+            print(f"Serverless superuser '{admin_user}' initialized.")
+    except Exception as exc:
+        print(f"Serverless DB init note: {exc}")
+
+
+init_serverless_db()
