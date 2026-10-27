@@ -1,21 +1,23 @@
-
-
+import os
 from pathlib import Path
+import dj_database_url
 
 # Base Directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # SECURITY
-SECRET_KEY = "django-insecure-#04yz$_%cn*fna*24@gt_cei$p3=#xblg=2ccu3)_8(py07r!y"
+SECRET_KEY = os.environ.get(
+    "SECRET_KEY",
+    "django-insecure-#04yz$_%cn*fna*24@gt_cei$p3=#xblg=2ccu3)_8(py07r!y"
+)
 
-DEBUG = True
+DEBUG = os.environ.get("DEBUG", "True").lower() in ("true", "1")
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*", ".vercel.app", "localhost", "127.0.0.1"]
 
 
 INSTALLED_APPS = [
-
     "jazzmin",
 
     "django.contrib.admin",
@@ -29,10 +31,9 @@ INSTALLED_APPS = [
 ]
 
 
-
-
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -68,14 +69,33 @@ TEMPLATES = [
 WSGI_APPLICATION = "HireHub.wsgi.application"
 
 
+# ============================
+# Database Configuration
+# ============================
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+DATABASE_URL = os.environ.get("DATABASE_URL")
+
+if DATABASE_URL:
+    DATABASES = {
+        "default": dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
     }
-}
+else:
+    # On Vercel serverless functions, the root is read-only; /tmp is writable
+    if "VERCEL" in os.environ:
+        db_path = Path("/tmp") / "db.sqlite3"
+    else:
+        db_path = BASE_DIR / "db.sqlite3"
 
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": db_path,
+        }
+    }
 
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -111,11 +131,22 @@ USE_TZ = True
 # Static & Media Files
 # ============================
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
 
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+
+STATIC_ROOT = BASE_DIR.parent / "staticfiles_build" / "static"
+
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+    },
+}
 
 MEDIA_URL = "/media/"
 

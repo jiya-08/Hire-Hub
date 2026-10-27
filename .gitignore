@@ -28,6 +28,8 @@ venv.bak/
 db.sqlite3
 db.sqlite3-journal
 media/
+staticfiles_build/
+.vercel/
 *.log
 
 # Environment variables & secrets

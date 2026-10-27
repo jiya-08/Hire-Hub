@@ -27,6 +27,7 @@
 - [📊 Database Architecture & Models](#-database-architecture--models)
 - [📁 Project Structure](#-project-structure)
 - [🚀 Quick Start & Installation](#-quick-start--installation)
+- [☁️ Deploying to Vercel](#️-deploying-to-vercel)
 - [🎨 Admin Dashboard Showcase](#-admin-dashboard-showcase)
 - [🗺️ Development Roadmap](#️-development-roadmap)
 - [🤝 Contributing](#-contributing)
@@ -279,6 +280,25 @@ python manage.py runserver
 Open your browser and navigate to:
 - 🌐 **Home Page:** [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
 - 🛡️ **Admin Dashboard:** [http://127.0.0.1:8000/admin/](http://127.0.0.1:8000/admin/)
+
+---
+
+## ☁️ Deploying to Vercel
+
+HireHub is fully configured for seamless deployment on [Vercel](https://vercel.com/) via `@vercel/python` serverless functions and `@vercel/static-build`:
+
+1. **Import Repository:**
+   - Log into your [Vercel Dashboard](https://vercel.com/).
+   - Click **Add New... ➔ Project**.
+   - Select and import **`jiya-08/Hire-Hub`**.
+2. **Configure Environment Variables:**
+   Under **Environment Variables**, you can define:
+   - `SECRET_KEY`: A secure production secret key.
+   - `DATABASE_URL`: Connection URL for your external database (e.g., PostgreSQL on [Neon](https://neon.tech/), [Supabase](https://supabase.com/), or Railway).
+   - `DEBUG`: `False` (or `True` during testing).
+3. **Deploy:**
+   - Click **Deploy**. Vercel runs `build_files.sh` to install dependencies and collect all Jazzmin static assets automatically.
+   - Your site will be live at `https://<your-project>.vercel.app/`!
 
 ---
 
