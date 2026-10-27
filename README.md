@@ -17,6 +17,12 @@
   <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License"/>
 </p>
 
+<p align="center">
+  <a href="https://vercel.com/new/clone?repository-url=https://github.com/jiya-08/Hire-Hub">
+    <img src="https://vercel.com/button" alt="Deploy with Vercel"/>
+  </a>
+</p>
+
 ---
 
 ## 📌 Table of Contents
